@@ -1,4 +1,4 @@
-package com.example.DAO;
+package org.example.dao;
 
 public interface IDao {
     double getValue();

@@ -1,11 +1,8 @@
-package com.example.config;
+package org.example.config;
 
-import com.example.DAO.IDao;
+import org.example.dao.IDao;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 import java.util.Map;
@@ -21,15 +18,15 @@ public class PropertyDrivenConfig {
         this.candidates = candidates;
     }
 
-    @Value("${dao.target:dao}")
+    @Value("${dao.target:daoImpl}")
     private String target;
 
     @Bean(name = "dao")
-    @DependsOn("propertySourcesPlaceholderConfigurer")
+    @Primary  // Marque ce bean comme primaire pour résoudre les ambiguïtés
     public IDao selectedDao() {
         IDao bean = candidates.get(target);
         if (bean == null) {
-            throw new IllegalArgumentException("Implémentation inconnue: " + target + " (dao|dao2|daoFile|daoApi)");
+            throw new IllegalArgumentException("Implémentation inconnue: " + target + " (daoImpl|daoImpl2|daoFile|daoApi)");
         }
         return bean;
     }
